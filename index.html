@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="Description" content="Enter your description here"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="./main.css">
+        <script src="./keyboard.js" defer></script>
+        <script src="./waveforms.js" defer></script>
+        <script src="./volume.js" defer></script>
+        <!-- <script src="./LFO.js" defer></script> -->
+        <!-- <script src="./Adsr.js" defer></script> -->
+        <title>Keyboard</title>
+    </head>
+    <body>
+        <button id="success">Play Success Sound</button>
+        <br><br>
+        <button id="error">Play Error Sound</button>
+
+        <br><br>
+
+
+        <!-- KEYBOARD AND NOTES -->
+        
+        <ul id="keyboard">
+            <li note="C" class="white">A</li>
+            <li note="C#" class="black">W</li>
+            <li note="D" class="white offset">S</li>
+            <li note="D#" class="black">E</li>
+            <li note="E" class="white offset">D</li>
+            <li note="F" class="white">F</li>
+            <li note="F#" class="black">T</li>
+            <li note="G" class="white offset">G</li>
+            <li note="G#" class="black">Y</li>
+            <li note="A" class="white offset">H</li>
+            <li note="A#" class="black">U</li>
+            <li note="B" class="white offset">J</li>
+            <li note="C2" class="white">K</li>
+            <li note="C#2" class="black">O</li>
+            <li note="D2" class="white offset">L</li>
+            <li note="D#2" class="black">P</li>
+            <li note="E2" class="white offset">;</li>
+          </ul>
+
+
+        <!-- LFO -->
+        <label for="hz">Hz</label>
+        <input className="hz" id="hz" type="range" min="660" max="1320" value="880" step="1" />
+        <label for="lfo">LFO</label>cl
+        <input className="lfo" id="lfo" type="range" min="1" max="10" value="5" step=".1" />
+        <!-- <p class="ms-4">LFO </p>
+        <input className="frequencySlider" type="range" min="0" max="1" step=".1" value=".5">   -->
+
+
+        <!--  VOLUME   -->
+        <p class="ms-4 ">Volume</p>
+        <input className="volumeSlider" id="volume" type="range" min="0" max=".1" step=".001" value=".05">
+
+
+        <!--  OCTAVE   -->
+        <p class="ms-4 mt-2">+ OCTAVE -</p>
+        <input className="octSlider" id="oct" type="range" min="0" max="2" step="1" value="1">
+
+
+        <!-- ADSR -->
+        <p class="ms-4 mt-2">ATTACK</p>
+        <input className="attackSlider" type="range" min=".001" max=".5" step="0.001" value=".3">
+        
+        <p class="ms-4 mt-2">DECAY</p>
+        <input className="decaySlider" type="range" min=".001" max=".3" step="0.01" value="1">
+        
+        <p class="ms-4 mt-2">SUSTAIN</p>
+        <input className="sustainSlider" type="range" min="100" max="200000" step="1" value="200">
+        
+        <p class="ms-4 mt-2">RELEASE</p>
+        <input className="releaseSlider" type="range" min="0.5" max="2.5" step="0.01" value="1">
+        <!--         -->
+        
+
+        <!-- FILTERS -->
+        <p class="ms-4">Filter (Bandpass)</p>
+        <input className="frequencySlider" type="range" min="0" max=".99" step=".0001" value=".5">
+        
+        <p class="ms-4">Q filter</p>
+        <input className="qSlider" type="range" min="0.001" max=".3" step=".001" value="0.001">
+        <!--         -->
+        
+        
+
+
+        <!-- THIS IS WAVEFORM SLIDER -->
+        <p class="ms-4 mt-5">WAVEFORM</p>
+        <input className="waveSlider" type="range" min="0" max=".75" step="0.25" value=".50">
+
+        
+        
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+    </body>
+</html>
