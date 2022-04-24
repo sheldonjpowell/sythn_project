@@ -11,7 +11,9 @@
         <script src="./keyboard.js" defer></script>
         <script src="./waveforms.js" defer></script>
         <script src="./volume.js" defer></script>
-        <!-- <script src="./LFO.js" defer></script> -->
+        <script src="./Midi.js" defer></script>
+        <script src="./LFO.js" defer></script>
+        <script src="./visulizer.js" defer></script>
         <!-- <script src="./Adsr.js" defer></script> -->
         <title>Keyboard</title>
     </head>
@@ -22,7 +24,7 @@
 
         <br><br>
 
-
+        <video id="video" style ='border-color: black;'  width="240px" height="135px" autoplay></video>
         <!-- KEYBOARD AND NOTES -->
         
         <ul id="keyboard">
@@ -73,7 +75,7 @@
         <input className="decaySlider" type="range" min=".001" max=".3" step="0.01" value="1">
         
         <p class="ms-4 mt-2">SUSTAIN</p>
-        <input className="sustainSlider" type="range" min="100" max="200000" step="1" value="200">
+        <input className="sustainSlider" type="range" min="400" max="200000" step="1" value="200">
         
         <p class="ms-4 mt-2">RELEASE</p>
         <input className="releaseSlider" type="range" min="0.5" max="2.5" step="0.01" value="1">

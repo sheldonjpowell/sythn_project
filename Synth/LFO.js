@@ -1,4 +1,4 @@
-const context = new window.AudioContext();
+const actx = new window.AudioContext();
 
 document.querySelector('#success').addEventListener('click', () => {
     const actx = new (AudioContext || webkitAudioContext)();
