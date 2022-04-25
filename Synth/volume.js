@@ -1,4 +1,4 @@
-const context = new window.AudioContext();
+// const context = new window.AudioContext();
 
 
 // const volumeControl = document.querySelector('#volume');
