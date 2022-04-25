@@ -1,7 +1,8 @@
-// const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 const getElementByNote = (note) =>
   note && document.querySelector(`[note="${note}"]`);
+  
 
 
 const keys = {
@@ -83,6 +84,7 @@ const keys = {
     }
 
     N += 12 * (octave - (octSlider + 3));
+    console.log(`Note: ${note}`)
     return A4 * Math.pow(2, N / 12);
 };
 
@@ -184,8 +186,8 @@ const playKey = (key) => {
   
     setAttack();
     setDecay();
-    // setSustain();
     setRelease();
+    // setSustain();
     // setVolume();
 
     // playPulse()
@@ -195,23 +197,29 @@ const playKey = (key) => {
 
 
 
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
 
     
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-
+    
 
     
     
     ///// This is the Waveform.js Connection/////
+
     osc.connect(noteGainNode);
     let inputSlider = document.querySelector('input[className="waveSlider"').value;
     console.log(inputSlider)
     osc.type = WAVEFORMS[inputSlider]
+
+    
+    
     // osc.type = "triangle";
   
     const freq = getHz(keys[key].note, (keys[key].octaveOffset || 0) + 3);
-    console.log(`Freq ${freq}`)
+    console.log(`Freq: ${freq}`)
   
     if (Number.isFinite(freq)) {
       osc.frequency.value = freq;
@@ -246,100 +254,207 @@ const stopKey = (key) => {
   };
 
 
-// /////////////////////////////////////////////////////////
-//         /////THIS IS WHERE I ADD THE MIDI///////
-// /////////////////////////////////////////////////////////
 
 
-// if (navigator.requestMIDIAccess) {
-//     navigator.requestMIDIAccess().then(success, failure)
-// }
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/////////////////////////////////////////////
 
-// function success(midiAccess) {
-//     midiAccess.addEventListener('statechange', updateDevices);
 
-//     const inputs = midiAccess.inputs;
+
+
+
+
+
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+        /////THIS IS WHERE I ADD THE MIDI///////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+const oscillators = {};
+
+function midiToFreq(number) {
     
-//     inputs.forEach((input) =>{
-//         input.addEventListener('midimessage', handleInput)
-//     })
-// }
+    const A4 = 440;
+    return (A4/ 32) * (2 ** ((number- 9) / 12));
+}
 
-// function handleInput(input){
-//     const command = input.data[0];
-//     const note = input.data[1];
-//     const velocity = input.data[2];
+if (navigator.requestMIDIAccess) {
+    navigator.requestMIDIAccess().then(success, failure)
+}
 
-//     switch (command){
-//         case 144:
-//         if(velocity > 0){
-//             // note on
-//             noteOn(note, velocity);
-//         } else {
-//             noteOff(note);
-//         }
-//         break;
-//         case 128:
-//         noteOff(note);
-//             break; // note off
-//     }    
-// }
+function success(midiAccess) {
+    midiAccess.addEventListener('statechange', updateDevices);
 
-
-// function noteOn(note, velocity){
-//     const osc = audioContext.createOscillator();
-
-//     const noteGainNode = audioContext.createGain()
-//     noteGainNode.gain.value = .33;
-//     const velocityGainAmount = (1 / 127) * velocity;
-//     const velocityGain = audioContext.createGain();
-//     velocityGain.gain.value = velocityGainAmount;
+    const inputs = midiAccess.inputs;
     
-//     const freq = getHz(keys[key].note, (keys[key].octaveOffset || 0) + 3);
-//     // osc.frequency.value = freq;
-//     console.log(`NoteOn: ${freq}`)
+    inputs.forEach((input) =>{
+        input.addEventListener('midimessage', handleInput)
+    })
+}
 
 
 
-//     osc.connect(noteGainNode);
-//     noteGainNode.connect(velocityGain);
-//     velocityGain.connect(audioContext.destination);
+function handleInput(input){
+    const command = input.data[0];
+    const note = input.data[1];
+    const velocity = input.data[2];
 
-//     osc.gain = noteGainNode;
-//     oscillators[note.toString()] = osc;
-//     console.log(oscillators[note.toString()])
-
-
-//     osc.start()
-// }
-
-// function noteOff(note){
-//     const osc = oscillators[note.toString()];
-//     const noteGainNode = osc.gain;
-//     noteGainNode.gain.setValueAtTime(noteGainNode.gain.value, audioContext.currentTime);
-//     noteGainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.03);
-
-//     setTimeout(() =>{
-//         osc.stop();
-//         osc.disconnect();
-//     }, 20)
-//     // osc.stop();
-
-//     delete oscillators[note.toString()];
-//     console.log(oscillators)
-
-// }
+    switch (command){
+        case 144:
+        if(velocity > 0){
+            // note on
+            noteOn(note, velocity);
+        } else {
+            noteOff(note);
+        }
+        break;
+        case 128:
+        noteOff(note);
+            break; // note off
+    }    
+}
 
 
-// function updateDevices(event){
-//     console.log(`Name: ${event.port.name}, Brand: ${event.port.manufacturer}, State: ${event.port.state}, Type: ${event.port.type}`)
 
-// }
 
-// function failure() {
-//     console.log('Couldnot connect MIDI')
-// }
+//// NOTE ON MIDI //////
 
+function noteOn(note, velocity){
+
+
+    let volumeSlider = document.querySelector('input[className="volumeSlider"').value;
+    volumeSlider = parseFloat(volumeSlider)
+    console.log(`${volumeSlider}`)
+
+    let attackSlider = document.querySelector('input[className="attackSlider"').value;
+    attackSlider = parseFloat(attackSlider)
+    console.log(`${attackSlider}`)
+
+    let decaySlider = document.querySelector('input[className="decaySlider"').value;
+    decaySlider = parseFloat(decaySlider)
+    console.log(`${decaySlider}`)
+
+    let sustainSlider = document.querySelector('input[className="sustainSlider"').value;
+    sustainSlider = parseFloat(sustainSlider)
+    console.log(sustainSlider)
+
+
+    let releaseSlider = document.querySelector('input[className="releaseSlider"').value;
+    releaseSlider = parseFloat(releaseSlider)
+    console.log(`${releaseSlider}`)
+
+
+
+    let inputSlider = document.querySelector('input[className="waveSlider"').value;
+
+    const osc = audioContext.createOscillator();
+
+    const oscGain = audioContext.createGain()
+    oscGain.gain.value = .33;
+    const velocityGainAmount = (1 / 127) * velocity;
+    const velocityGain = audioContext.createGain();
+    velocityGain.gain.value = velocityGainAmount;
+    // connecting the WaveFroms to The Midi Controler
+    osc.type = WAVEFORMS[inputSlider];
+    osc.frequency.value = midiToFreq(note);
+
+
+    oscGain.connect(audioContext.destination);
+    console.log(`currentTime${audioContext.currentTime}`)
+
+
+    const zeroGain = 0.000001;
+    const maxGain = volumeSlider;
+    const sustainedGain = 0.0001;
+    oscGain.gain.value = zeroGain;
+  
+    const setAttack = () =>
+    oscGain.gain.exponentialRampToValueAtTime(
+      maxGain,
+      audioContext.currentTime + attackSlider 
+    );
+      
+    const setDecay = () =>
+        oscGain.gain.linearRampToValueAtTime(
+          sustainedGain,
+            audioContext.currentTime + decaySlider
+        );
+
+    const setRelease = () =>
+        oscGain.gain.linearRampToValueAtTime(
+            zeroGain,
+            audioContext.currentTime + releaseSlider
+            
+            );
+
+
+    
+    console.log(WAVEFORMS[inputSlider])
+    console.log(osc.type)
+    console.log(note)
+    console.log(`NoteOn: ${osc.frequency.value}`)
+
+
+
+    osc.connect(oscGain);
+    oscGain.connect(velocityGain);
+    velocityGain.connect(audioContext.destination);
+
+    osc.gain = oscGain;
+    oscillators[note.toString()] = osc;
+    console.log(oscillators[note.toString()])
+
+
+    osc.start();
+
+    setAttack();
+    setDecay();
+    setRelease();
+}
+
+
+
+
+////// NOTE OFF MIDI////////
+
+function noteOff(note){
+    const osc = oscillators[note.toString()];
+    const oscGain = osc.gain;
+    oscGain.gain.setValueAtTime(oscGain.gain.value, audioContext.currentTime);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.03);
+
+    let sustainSlider = document.querySelector('input[className="sustainSlider"').value;
+      sustainSlider = parseFloat(sustainSlider)
+      console.log(sustainSlider)
+      
+      setTimeout(() => {
+        osc.stop();
+        // osc.disconnect();
+      }, sustainSlider);
+    // osc.stop();
+
+    delete oscillators[note.toString()];
+    // console.log(oscillators)
+
+}
+
+
+function updateDevices(event){
+    console.log(`Name: ${event.port.name}, Brand: ${event.port.manufacturer}, State: ${event.port.state}, Type: ${event.port.type}`)
+
+}
+
+function failure() {
+    console.log('Could not connect MIDI')
+}
 
 
 
@@ -348,6 +463,19 @@ const stopKey = (key) => {
 // /////////////////////////////////////////////
 // /////////////////////////////////////////////
 // /////////////////////////////////////////////
+// /////////////////////////////////////////////
+// /////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -383,7 +511,15 @@ document.addEventListener("keydown", (e) => {
   });
 
 
-// const freq = getHz(keys[key].note, (keys[key].octaveOffset || 0) + 3);
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+/////////////////////////////////////////////
+
+
+const presets = {
+    
+
+}
 
 
 
